@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IBD Drugs – Drag & Drop Match</title>
+  <style>
+    :root { --bg:#0b1324; --card:#111a33; --ink:#e8eefc; --muted:#9fb2e0; --accent:#8ab4ff; --good:#2ecc71; --bad:#e74c3c; }
+    html, body { height: 100%; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: linear-gradient(180deg,#0b1324,#0c183a); color:var(--ink); display:flex; flex-direction:column; }
+    header{padding:1.2rem 1rem .4rem;text-align:center;}
+    h1{margin:0;font-size:clamp(1.3rem,2.6vw,2rem);}
+    .subtitle{color:var(--muted);font-size:.95rem;}
+    .wrap{display:grid;gap:1rem;grid-template-columns:1fr;max-width:1100px;margin:0 auto;padding:1rem;width:100%;}
+    @media(min-width:860px){.wrap{grid-template-columns:1fr 1fr;}}
+    .panel{background:rgba(17,26,51,.7);border:1px solid rgba(138,180,255,.15);border-radius:16px;padding:.85rem;backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(0,0,0,.25);}
+    .panel h2{margin:.25rem .25rem .75rem;font-size:1rem;color:var(--muted);}
+    .list{display:grid;gap:.6rem;grid-auto-rows:minmax(48px,auto);}
+    .pill,.drop{border-radius:12px;padding:.65rem .75rem;border:1px dashed rgba(138,180,255,.35);background:rgba(255,255,255,.03);}
+    .pill{cursor:grab;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+    .pill:active{cursor:grabbing;}
+    .tag{font-size:.7rem;color:var(--muted);margin-left:.5rem;}
+    .drop{min-height:64px;display:grid;align-items:center;transition:background .15s,border-color .15s;}
+    .drop.hover{background:rgba(138,180,255,.08);border-color:var(--accent);}
+    .drop.filled{border-style:solid;}
+    .desc{font-size:.9rem;line-height:1.25rem;}
+    .controls{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;padding:.6rem 1rem 1rem;}
+    button{background:var(--card);color:var(--ink);border:1px solid rgba(138,180,255,.3);padding:.6rem .9rem;border-radius:12px;font-weight:600;cursor:pointer;}
+    .result{text-align:center;font-weight:700;padding:.5rem 0;}
+    .correct{color:var(--good);} .incorrect{color:var(--bad);}
+    footer{text-align:center;color:var(--muted);font-size:.8rem;padding-bottom:1rem;}
+  </style>
+</head>
+<body>
+<header>
+  <h1>IBD Drugs – Ulcerative Colitis & Crohn’s</h1>
+  <div class="subtitle">Drag each <b>drug</b> onto its correct <b>description</b>. Shuffles on load.</div>
+</header>
+
+<div class="controls">
+  <button id="reshuffleBtn">🔀 Shuffle</button>
+  <button id="resetBtn">♻️ Reset</button>
+  <div class="result" id="score"></div>
+</div>
+
+<main class="wrap">
+  <section class="panel"><h2>Drugs</h2><div id="drugList" class="list"></div></section>
+  <section class="panel"><h2>Descriptions</h2><div id="descList" class="list"></div></section>
+</main>
+
+<footer>Includes categories from UC & Crohn’s disease drug classes.</footer>
+
+<script>
+const DRUGS = [
+  // UC drugs
+  {name:"Sulfasalazine",category:"5-ASA Agent",description:"A prodrug metabolized to 5-ASA (mesalamine) with anti-inflammatory effect in colon; used for mild-moderate UC."},
+  {name:"Mesalamine",category:"5-ASA Agent",description:"5-aminosalicylic acid; topical anti-inflammatory for mild-moderate UC."},
+  {name:"Olsalazine",category:"5-ASA Agent",description:"Dimer that releases mesalamine in colon; used for UC."},
+  {name:"Balsalazide",category:"5-ASA Agent",description:"Prodrug cleaved in colon to release mesalamine; used in UC."},
+  {name:"Tofacitinib",category:"JAK Inhibitor",description:"Oral Janus kinase inhibitor; reduces cytokine signaling in moderate-severe UC."},
+  {name:"Upadacitinib",category:"JAK Inhibitor",description:"Selective JAK1 inhibitor; for moderate-severe UC or Crohn’s."},
+  {name:"Guselkumab",category:"IL-23 Inhibitor",description:"Monoclonal antibody against IL-23; reduces inflammation in UC or Crohn’s."},
+  {name:"Mirikizumab",category:"IL-23 Inhibitor",description:"Anti–IL-23 antibody approved for UC."},
+  {name:"Risankizumab",category:"IL-23 Inhibitor",description:"Blocks IL-23 to reduce gut inflammation; used for UC & Crohn’s."},
+  {name:"Ustekinumab",category:"IL-12/23 Inhibitor",description:"Targets IL-12/23 p40 subunit; used in moderate-severe UC and Crohn’s."},
+  {name:"Etrasimod",category:"S1P Modulator",description:"Oral sphingosine-1-phosphate receptor modulator; prevents lymphocyte egress to reduce gut inflammation (UC)."},
+  {name:"Ozanimod",category:"S1P Modulator",description:"S1P receptor modulator; reduces lymphocyte migration, used in UC."},
+  {name:"Adalimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α monoclonal antibody for moderate-severe UC or Crohn’s."},
+  {name:"Golimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α antibody used in UC."},
+  {name:"Infliximab",category:"TNF-α Inhibitor",description:"Chimeric monoclonal antibody vs TNF-α; used for UC and Crohn’s."},
+  {name:"Vedolizumab",category:"α4 Integrin Inhibitor",description:"Gut-selective α4β7 integrin blocker; prevents leukocyte trafficking into GI tissue, for UC and Crohn’s."},
+
+  // Crohn’s unique
+  {name:"Certolizumab",category:"TNF-α Inhibitor",description:"PEGylated Fab fragment vs TNF-α; used for Crohn’s disease."},
+  {name:"Natalizumab",category:"α4 Integrin Inhibitor",description:"Anti-α4 integrin antibody; blocks leukocyte adhesion; used for Crohn’s (but risk of PML)."},
+];
+
+function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const drugListEl=document.getElementById('drugList');const descListEl=document.getElementById('descList');const scoreEl=document.getElementById('score');let matched=new Set();
+
+function render(){matched.clear();scoreEl.textContent="";drugListEl.innerHTML="";descListEl.innerHTML="";const left=shuffle(DRUGS);const right=shuffle(DRUGS);
+left.forEach(d=>{const el=document.createElement('div');el.className='pill';el.draggable=true;el.id='drug-'+d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');el.innerHTML=`<span>${d.name}</span><span class="tag">drag</span>`;el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',d.name);});drugListEl.appendChild(el);});
+right.forEach(d=>{const el=document.createElement('div');el.className='drop';el.dataset.drug=d.name;const cap=document.createElement('div');cap.className='desc';cap.innerHTML=`<b>${d.category}:</b> ${d.description}`;el.appendChild(cap);el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('hover');});el.addEventListener('dragleave',()=>el.classList.remove('hover'));el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('hover');const dn=e.dataTransfer.getData('text/plain');const ok=(dn===el.dataset.drug);const drag=document.getElementById('drug-'+dn.toLowerCase().replace(/[^a-z0-9]+/g,'-'));if(!drag)return;if(ok){el.classList.add('filled');el.style.borderColor='rgba(46,204,113,.8)';drag.style.opacity='.35';drag.draggable=false;matched.add(dn);updateScore();}else{el.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:180,iterations:1});}});descListEl.appendChild(el);});}
+
+function updateScore(){const total=DRUGS.length;const n=matched.size;scoreEl.innerHTML=(n===total)?`<span class="correct">🎉 All ${n}/${total} matched!</span>`:`<span>${n}/${total} correct</span>`;}
+document.getElementById('reshuffleBtn').addEventListener('click',render);document.getElementById('resetBtn').addEventListener('click',render);render();
+</script>
+</body>
+</html>
