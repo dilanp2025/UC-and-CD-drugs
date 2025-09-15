@@ -53,26 +53,26 @@
 <script>
 const DRUGS = [
   // UC drugs
-  {name:"Sulfasalazine",category:"5-ASA Agent",description:"A prodrug metabolized to 5-ASA (mesalamine) with anti-inflammatory effect in colon; used for mild-moderate UC."},
-  {name:"Mesalamine",category:"5-ASA Agent",description:"5-aminosalicylic acid; topical anti-inflammatory for mild-moderate UC."},
-  {name:"Olsalazine",category:"5-ASA Agent",description:"Dimer that releases mesalamine in colon; used for UC."},
-  {name:"Balsalazide",category:"5-ASA Agent",description:"Prodrug cleaved in colon to release mesalamine; used in UC."},
+  {name:"Sulfasalazine",category:"5-ASA Agent",description:" sulfapyride + 5-ASA; contraindicated in sulfonamide-allergic patients; used for mild-moderate UC."},
+  {name:"Mesalamine",category:"5-ASA Agent",description:"single 5-aminosalicylic acid; for mild-moderate UC."},
+  {name:"Olsalazine",category:"5-ASA Agent",description:"2 molecules of 5-ASA; maintenance of remission; used for mild-moderate UC."},
+  {name:"Balsalazide",category:"5-ASA Agent",description:"inert carrier + 5-ASA; for active disease only; used in mild-moderate UC."},
   {name:"Tofacitinib",category:"JAK Inhibitor",description:"Oral Janus kinase inhibitor; reduces cytokine signaling in moderate-severe UC."},
-  {name:"Upadacitinib",category:"JAK Inhibitor",description:"Selective JAK1 inhibitor; for moderate-severe UC or Crohn’s."},
-  {name:"Guselkumab",category:"IL-23 Inhibitor",description:"Monoclonal antibody against IL-23; reduces inflammation in UC or Crohn’s."},
-  {name:"Mirikizumab",category:"IL-23 Inhibitor",description:"Anti–IL-23 antibody approved for UC."},
-  {name:"Risankizumab",category:"IL-23 Inhibitor",description:"Blocks IL-23 to reduce gut inflammation; used for UC & Crohn’s."},
+  {name:"Upadacitinib",category:"JAK Inhibitor",description:"Selective JAK1 inhibitor; for moderate-severe UC and Crohn’s."},
+  {name:"Guselkumab",category:"IL-23 Inhibitor",description:"Monoclonal antibody against IL-23; reduces inflammation in moderate-severe UC or Crohn’s."},
+  {name:"Mirikizumab",category:"IL-23 Inhibitor",description:"Anti–IL-23 antibody approved for moderate-severe UC and CD."},
+  {name:"Risankizumab",category:"IL-23 Inhibitor",description:"Blocks IL-23 to reduce gut inflammation; used for moderate-severe UC & Crohn’s."},
   {name:"Ustekinumab",category:"IL-12/23 Inhibitor",description:"Targets IL-12/23 p40 subunit; used in moderate-severe UC and Crohn’s."},
   {name:"Etrasimod",category:"S1P Modulator",description:"Oral sphingosine-1-phosphate receptor modulator; prevents lymphocyte egress to reduce gut inflammation (UC)."},
-  {name:"Ozanimod",category:"S1P Modulator",description:"S1P receptor modulator; reduces lymphocyte migration, used in UC."},
-  {name:"Adalimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α monoclonal antibody for moderate-severe UC or Crohn’s."},
-  {name:"Golimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α antibody used in UC."},
-  {name:"Infliximab",category:"TNF-α Inhibitor",description:"Chimeric monoclonal antibody vs TNF-α; used for UC and Crohn’s."},
-  {name:"Vedolizumab",category:"α4 Integrin Inhibitor",description:"Gut-selective α4β7 integrin blocker; prevents leukocyte trafficking into GI tissue, for UC and Crohn’s."},
+  {name:"Ozanimod",category:"S1P Modulator",description:"S1P receptor modulator; Requires 7-day up  titration due to first dose heart rate lowering; reduces lymphocyte migration, used in UC."},
+  {name:"Adalimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α monoclonal antibody for moderate-severe UC and Crohn’s."},
+  {name:"Golimumab",category:"TNF-α Inhibitor",description:"Anti–TNF-α antibody used in UC only."},
+  {name:"Infliximab",category:"TNF-α Inhibitor",description:"IV injection; used for UC and Crohn’s."},
+  {name:"Vedolizumab",category:"α4 Integrin Inhibitor",description:"prevents leukocyte trafficking into GI tissue, for UC and Crohn’s."},
 
   // Crohn’s unique
-  {name:"Certolizumab",category:"TNF-α Inhibitor",description:"PEGylated Fab fragment vs TNF-α; used for Crohn’s disease."},
-  {name:"Natalizumab",category:"α4 Integrin Inhibitor",description:"Anti-α4 integrin antibody; blocks leukocyte adhesion; used for Crohn’s (but risk of PML)."},
+  {name:"Certolizumab",category:"TNF-α Inhibitor",description:"used for Crohn’s disease."},
+  {name:"Natalizumab",category:"α4 Integrin Inhibitor",description:"Anti-α4 integrin antibody; blocks leukocyte adhesion; used for only Crohn’s (but risk of PML)."},
 ];
 
 function shuffle(arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
